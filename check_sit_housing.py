@@ -2,21 +2,24 @@
 """
 Monitor Sit student housing (bolig.sit.no) for newly available units in a given
 city (default: Trondheim) and send a push notification to your phone via ntfy.sh
-whenever a new unit appears.
+whenever a new unit appears. Each notification includes the building/area, and a
+chosen favourite area (default: Karinelund) is flagged with top priority.
 
 How it works
 ------------
 The bolig.sit.no site is a static Gatsby front-end that loads live availability
-from a GraphQL API. This script calls that same API directly (no browser needed),
-filters to the target city, diffs the result against the last-seen set stored in
-a small JSON state file, and pushes a notification for any newly-appeared unit.
+from a GraphQL API. This script calls that same API directly (no browser needed):
+it lists the available units in the target city, then resolves each unit's
+building/area, diffs the result against the last-seen set stored in a small JSON
+state file, and pushes a notification for any newly-appeared unit.
 
 Environment variables
 ----------------------
-NTFY_TOPIC   (required) Your secret ntfy topic name, e.g. "sit-trondheim-a8f3k2".
-NTFY_SERVER  (optional) ntfy server base URL. Default: https://ntfy.sh
-CITY         (optional) City to watch (the "parent" location). Default: Trondheim
-STATE_FILE   (optional) Path to the JSON state file. Default: state/seen.json
+NTFY_TOPIC      (required) Your secret ntfy topic, e.g. "sit-trondheim-a8f3k2".
+NTFY_SERVER     (optional) ntfy server base URL. Default: https://ntfy.sh
+CITY            (optional) City to watch (the "parent" location). Default: Trondheim
+HIGHLIGHT_AREA  (optional) Area to flag with top priority. Default: Karinelund
+STATE_FILE      (optional) Path to the JSON state file. Default: state/seen.json
 
 Exit code is 0 for normal runs (including "no new housing") so a scheduler never
 treats a quiet check as a failure.
@@ -34,6 +37,7 @@ GRAPHQL_ENDPOINT = os.environ.get(
     "https://as-portal-a-prod884f86a.azurewebsites.net/graphql",
 )
 CITY = os.environ.get("CITY", "Trondheim")
+HIGHLIGHT_AREA = os.environ.get("HIGHLIGHT_AREA", "Karinelund").strip()
 NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/")
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "").strip()
 STATE_FILE = os.environ.get("STATE_FILE", os.path.join("state", "seen.json"))
@@ -48,8 +52,9 @@ query ($f: GetHousingsInput!) {
       rentalObjectId
       isAvailable
       availableFrom
-      availableTo
-      isHighlighted
+    }
+    filterCounts {
+      locations { key value }
     }
   }
 }
@@ -72,36 +77,67 @@ def http_post_json(url, payload, headers=None, timeout=30):
     return json.loads(raw) if raw else {}
 
 
-def fetch_available_units(city, retries=3):
-    """Return list of available rental-object dicts for the given city."""
+def graphql_housings(location_children, include_filter_counts=False, retries=3):
+    """Call the housings query for CITY, optionally scoped to specific buildings."""
     variables = {
         "f": {
             "pageSize": 500,
             "offset": 0,
             "showUnavailable": False,
-            "includeFilterCounts": False,
-            # parent = city, empty children = every building in that city.
-            "location": [{"parent": city, "children": []}],
+            "includeFilterCounts": include_filter_counts,
+            # parent = city; empty children = every building in that city.
+            "location": [{"parent": CITY, "children": location_children}],
         }
     }
     payload = {"query": QUERY, "variables": variables}
-
     last_err = None
     for attempt in range(1, retries + 1):
         try:
             result = http_post_json(GRAPHQL_ENDPOINT, payload)
             if result.get("errors"):
                 raise RuntimeError(f"GraphQL errors: {result['errors']}")
-            housings = (result.get("data") or {}).get("housings") or {}
-            units = housings.get("housingRentalObjects") or []
-            # Keep only genuinely available ones (belt-and-suspenders).
-            return [u for u in units if u.get("isAvailable")]
+            return (result.get("data") or {}).get("housings") or {}
         except (urllib.error.URLError, urllib.error.HTTPError, RuntimeError, ValueError) as e:
             last_err = e
             log(f"Fetch attempt {attempt}/{retries} failed: {e}")
             if attempt < retries:
                 time.sleep(5 * attempt)
     raise SystemExit(f"Could not fetch housing data after {retries} attempts: {last_err}")
+
+
+def fetch_available_units():
+    """
+    Return a dict: rentalObjectId -> {availableFrom, area}.
+
+    The availability API returns only unit IDs, so we resolve each unit's
+    building/area by querying the buildings that currently have availability.
+    """
+    top = graphql_housings([], include_filter_counts=True)
+    units = {
+        u["rentalObjectId"]: {"availableFrom": u.get("availableFrom"), "area": None}
+        for u in (top.get("housingRentalObjects") or [])
+        if u.get("isAvailable")
+    }
+    if not units:
+        return units
+
+    # Buildings (children of CITY) that currently have >0 available units.
+    prefix = CITY
+    locations = (top.get("filterCounts") or {}).get("locations") or []
+    buildings = [
+        loc["key"][len(prefix):]
+        for loc in locations
+        if loc["key"].startswith(prefix) and loc["key"] != prefix and loc["value"] > 0
+    ]
+
+    # Map each available unit to its building.
+    for building in buildings:
+        res = graphql_housings([building])
+        for u in (res.get("housingRentalObjects") or []):
+            uid = u["rentalObjectId"]
+            if uid in units:
+                units[uid]["area"] = building
+    return units
 
 
 def load_state(path):
@@ -116,12 +152,14 @@ def load_state(path):
         return None
 
 
-def save_state(path, seen_ids):
+def save_state(path, units):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     payload = {
         "city": CITY,
         "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "seen": sorted(seen_ids),
+        "seen": sorted(units.keys()),
+        # Human-friendly snapshot of what's currently available (id -> area).
+        "current": {uid: (info.get("area") or "unknown") for uid, info in sorted(units.items())},
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
@@ -136,11 +174,13 @@ def format_available_from(iso_str):
     if not iso_str:
         return "unknown"
     try:
-        # e.g. "2026-08-03T00:00:00.000+02:00"
-        dt = datetime.fromisoformat(iso_str)
-        return dt.strftime("%d %b %Y")
+        return datetime.fromisoformat(iso_str).strftime("%d %b %Y")  # e.g. 03 Sep 2026
     except ValueError:
         return iso_str
+
+
+def is_highlight(area):
+    return bool(area) and HIGHLIGHT_AREA and area.lower() == HIGHLIGHT_AREA.lower()
 
 
 def send_ntfy(title, message, click=None, tags=None, priority=None):
@@ -154,13 +194,33 @@ def send_ntfy(title, message, click=None, tags=None, priority=None):
     if tags:
         body["tags"] = tags
     if priority:
-        body["priority"] = priority
+        body["priority"] = priority  # ntfy priority is an integer 1..5
     try:
-        # ntfy supports JSON publishing by POSTing to the server root.
-        http_post_json(NTFY_SERVER, body)
+        http_post_json(NTFY_SERVER, body)  # ntfy JSON publishing (POST to root)
         log(f"Sent notification: {title}")
     except (urllib.error.URLError, urllib.error.HTTPError, ValueError) as e:
         log(f"Failed to send ntfy notification: {e}")
+
+
+def notify_new_unit(uid, info):
+    area = info.get("area") or "unknown area"
+    when = format_available_from(info.get("availableFrom"))
+    if is_highlight(area):
+        send_ntfy(
+            title=f"{HIGHLIGHT_AREA} spot available in {CITY}!",
+            message=f"{area}\n{uid}\nAvailable from {when}",
+            click=unit_link(uid),
+            tags=["star", "house"],
+            priority=5,  # max/urgent
+        )
+    else:
+        send_ntfy(
+            title=f"New {CITY} housing: {area}",
+            message=f"{area}\n{uid}\nAvailable from {when}",
+            click=unit_link(uid),
+            tags=["house"],
+            priority=4,  # high
+        )
 
 
 def main():
@@ -168,10 +228,10 @@ def main():
         log("WARNING: NTFY_TOPIC is not set. The script will run but cannot push "
             "notifications. Set the NTFY_TOPIC environment variable / secret.")
 
-    units = fetch_available_units(CITY)
-    by_id = {u["rentalObjectId"]: u for u in units}
-    current_ids = set(by_id.keys())
-    log(f"{CITY}: {len(current_ids)} available unit(s): {sorted(current_ids) or '-'}")
+    units = fetch_available_units()
+    current_ids = set(units.keys())
+    summary = ", ".join(f"{uid} ({units[uid].get('area') or '?'})" for uid in sorted(current_ids))
+    log(f"{CITY}: {len(current_ids)} available unit(s): {summary or '-'}")
 
     previous = load_state(STATE_FILE)
 
@@ -179,11 +239,13 @@ def main():
         # First run: establish a baseline and send one startup summary so you
         # know the monitor is alive, without spamming for every existing unit.
         if current_ids:
-            lines = [f"- {i} (from {format_available_from(by_id[i].get('availableFrom'))})"
+            lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
+                     f"(from {format_available_from(units[i].get('availableFrom'))})"
                      for i in sorted(current_ids)]
             send_ntfy(
                 title=f"Sit monitor started - watching {CITY}",
-                message=f"{len(current_ids)} unit(s) available right now:\n" + "\n".join(lines),
+                message=f"{len(current_ids)} unit(s) available now (favourite: {HIGHLIGHT_AREA}):\n"
+                        + "\n".join(lines),
                 click="https://bolig.sit.no/en/",
                 tags=["house"],
             )
@@ -191,10 +253,10 @@ def main():
             send_ntfy(
                 title=f"Sit monitor started - watching {CITY}",
                 message=f"No {CITY} units available right now. "
-                        "You'll get a ping when one appears.",
+                        f"You'll get a ping when one appears (favourite: {HIGHLIGHT_AREA}).",
                 tags=["house"],
             )
-        save_state(STATE_FILE, current_ids)
+        save_state(STATE_FILE, units)
         log("Baseline saved. Future runs will notify only on new units.")
         return
 
@@ -204,17 +266,10 @@ def main():
     else:
         log(f"NEW unit(s): {sorted(new_ids)}")
         for uid in sorted(new_ids):
-            u = by_id[uid]
-            send_ntfy(
-                title=f"New {CITY} housing available",
-                message=f"{uid}\nAvailable from {format_available_from(u.get('availableFrom'))}",
-                click=unit_link(uid),
-                tags=["house"],
-                priority=4,  # ntfy priority: 1=min .. 3=default .. 5=max. 4=high.
-            )
+            notify_new_unit(uid, units[uid])
 
     # Persist the full current set so units that come back later re-trigger.
-    save_state(STATE_FILE, current_ids)
+    save_state(STATE_FILE, units)
 
 
 if __name__ == "__main__":
