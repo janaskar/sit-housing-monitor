@@ -1,6 +1,6 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-01T19:57:06+00:00",
+  "updated": "2026-08-01T20:46:15+00:00",
   "current": {
     "MA10-42": "Moholt",
     "OB163-102": "Berg",
@@ -17,7 +17,7 @@
     "MA10-42": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-01T19:57:06+00:00",
+      "last_seen": "2026-08-01T20:46:15+00:00",
       "available_from": "2026-09-22T00:00:00.000+02:00",
       "notified_at": "2026-08-01T17:21:04+00:00"
     },
@@ -38,14 +38,14 @@
     "OB163-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-01T19:57:06+00:00",
+      "last_seen": "2026-08-01T20:46:15+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-09-03T00:00:00.000+02:00"
     },
     "WM41A-A132": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-01T19:57:06+00:00",
+      "last_seen": "2026-08-01T20:46:15+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-10-01T00:00:00.000+02:00"
     }
