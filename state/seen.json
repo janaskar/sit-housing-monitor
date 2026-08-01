@@ -1,18 +1,20 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-01T07:40:42+00:00",
+  "updated": "2026-08-01T09:44:37+00:00",
   "seen": [
-    "HK16-64",
-    "KG23a-23",
     "KL130-108",
     "KLO29-222",
+    "MA22-54",
+    "MAL11-206",
+    "OB163-102",
     "WM41A-A132"
   ],
   "current": {
-    "HK16-64": "Moholt",
-    "KG23a-23": "Nedre Singsakerslette",
     "KL130-108": "Lerkendal",
     "KLO29-222": "Bloksberg",
+    "MA22-54": "Moholt",
+    "MAL11-206": "Moholt",
+    "OB163-102": "Berg",
     "WM41A-A132": "Rosenborg"
   }
 }
