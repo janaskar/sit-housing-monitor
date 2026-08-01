@@ -1,7 +1,9 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-01T17:11:04+00:00",
+  "updated": "2026-08-01T17:21:05+00:00",
   "current": {
+    "MA10-42": "Moholt",
+    "OB155-203": "Berg",
     "OB163-102": "Berg",
     "WM41A-A132": "Rosenborg"
   },
@@ -13,6 +15,13 @@
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-10-01T00:00:00.000+02:00"
     },
+    "MA10-42": {
+      "area": "Moholt",
+      "available": true,
+      "last_seen": "2026-08-01T17:21:04+00:00",
+      "available_from": "2026-09-22T00:00:00.000+02:00",
+      "notified_at": "2026-08-01T17:21:04+00:00"
+    },
     "MA22-54": {
       "area": "Moholt",
       "available": false,
@@ -22,22 +31,22 @@
     },
     "OB155-203": {
       "area": "Berg",
-      "available": false,
-      "last_seen": "2026-08-01T15:55:03+00:00",
+      "available": true,
+      "last_seen": "2026-08-01T17:21:04+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-08-03T00:00:00.000+02:00"
     },
     "OB163-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-01T17:11:04+00:00",
+      "last_seen": "2026-08-01T17:21:04+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-09-03T00:00:00.000+02:00"
     },
     "WM41A-A132": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-01T17:11:04+00:00",
+      "last_seen": "2026-08-01T17:21:04+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-10-01T00:00:00.000+02:00"
     }
