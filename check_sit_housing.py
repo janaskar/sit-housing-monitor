@@ -30,7 +30,7 @@ import os
 import time
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 GRAPHQL_ENDPOINT = os.environ.get(
     "SIT_GRAPHQL_ENDPOINT",
@@ -41,6 +41,12 @@ HIGHLIGHT_AREA = os.environ.get("HIGHLIGHT_AREA", "Karinelund").strip()
 NTFY_SERVER = os.environ.get("NTFY_SERVER", "https://ntfy.sh").rstrip("/")
 NTFY_TOPIC = os.environ.get("NTFY_TOPIC", "").strip()
 STATE_FILE = os.environ.get("STATE_FILE", os.path.join("state", "seen.json"))
+# Don't re-notify about the same unit within this window, even if it disappears
+# from the listing and comes back (listings flicker / get briefly reserved).
+RENOTIFY_HOURS = int(os.environ.get("RENOTIFY_HOURS", "72"))
+# Forget units that have been gone this long, so a genuine re-list after a long
+# absence notifies again (and the state file doesn't grow forever).
+PRUNE_DAYS = int(os.environ.get("PRUNE_DAYS", "30"))
 UNIT_URL_TEMPLATE = "https://bolig.sit.no/en/unit/{slug}"
 
 # The query the site uses, reduced to the fields we care about.
@@ -140,26 +146,79 @@ def fetch_available_units():
     return units
 
 
-def load_state(path):
-    if not os.path.exists(path):
-        return None  # None => first run / no baseline yet
+def now_iso():
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def parse_iso(value):
+    if not value:
+        return None
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        return set(data.get("seen", []))
-    except (json.JSONDecodeError, OSError) as e:
-        log(f"Warning: could not read state file ({e}); treating as first run.")
+        return datetime.fromisoformat(value)
+    except ValueError:
         return None
 
 
-def save_state(path, units):
+def load_state(path):
+    """
+    Return (ledger, first_run).
+
+    ledger maps rentalObjectId -> {area, available, last_seen, notified_at,
+    available_from}. It is a *persistent* record: a unit stays in the ledger
+    (marked available=False) after it disappears, so brief flickers don't cause
+    duplicate notifications. `first_run` is True only when there's no usable
+    state at all (fresh install), which triggers the one-off startup summary.
+    """
+    if not os.path.exists(path):
+        return {}, True
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        log(f"Warning: could not read state file ({e}); treating as first run.")
+        return {}, True
+
+    known = data.get("known")
+    if isinstance(known, dict):
+        return known, False
+
+    # Migrate the old format ({seen: [...], current: {...}}): treat everything
+    # already seen as known + available + already-notified, so upgrading does
+    # not re-spam you for units you were already told about.
+    seen = data.get("seen")
+    if isinstance(seen, list):
+        current = data.get("current") or {}
+        stamp = now_iso()
+        migrated = {
+            uid: {
+                "area": current.get(uid),
+                "available": True,
+                "last_seen": stamp,
+                "notified_at": stamp,
+                "available_from": None,
+            }
+            for uid in seen
+        }
+        log(f"Migrated {len(migrated)} unit(s) from the old state format.")
+        return migrated, False
+
+    return {}, True
+
+
+def save_state(path, ledger):
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    current = {
+        uid: (e.get("area") or "unknown")
+        for uid, e in sorted(ledger.items())
+        if e.get("available")
+    }
     payload = {
         "city": CITY,
-        "updated": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "seen": sorted(units.keys()),
-        # Human-friendly snapshot of what's currently available (id -> area).
-        "current": {uid: (info.get("area") or "unknown") for uid, info in sorted(units.items())},
+        "updated": now_iso(),
+        # Human-friendly snapshot of what's available right now (id -> area).
+        "current": current,
+        # Full persistent ledger used for de-duplication.
+        "known": {uid: ledger[uid] for uid in sorted(ledger)},
     }
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
@@ -223,6 +282,26 @@ def notify_new_unit(uid, info):
         )
 
 
+def within_cooldown(notified_at, now):
+    """True if we already notified about this unit recently (suppress re-ping)."""
+    ts = parse_iso(notified_at)
+    return ts is not None and (now - ts) < timedelta(hours=RENOTIFY_HOURS)
+
+
+def prune_ledger(ledger, now):
+    """Drop units that have been unavailable longer than PRUNE_DAYS."""
+    cutoff = now - timedelta(days=PRUNE_DAYS)
+    stale = [
+        uid for uid, e in ledger.items()
+        if not e.get("available")
+        and (parse_iso(e.get("last_seen")) or now) < cutoff
+    ]
+    for uid in stale:
+        del ledger[uid]
+    if stale:
+        log(f"Pruned {len(stale)} stale unit(s) absent > {PRUNE_DAYS} days.")
+
+
 def main():
     if not NTFY_TOPIC:
         log("WARNING: NTFY_TOPIC is not set. The script will run but cannot push "
@@ -233,11 +312,42 @@ def main():
     summary = ", ".join(f"{uid} ({units[uid].get('area') or '?'})" for uid in sorted(current_ids))
     log(f"{CITY}: {len(current_ids)} available unit(s): {summary or '-'}")
 
-    previous = load_state(STATE_FILE)
+    ledger, first_run = load_state(STATE_FILE)
+    now = datetime.now(timezone.utc)
+    stamp = now_iso()
 
-    if previous is None:
-        # First run: establish a baseline and send one startup summary so you
-        # know the monitor is alive, without spamming for every existing unit.
+    # Decide which currently-available units are genuinely worth a notification.
+    to_notify = []
+    for uid in sorted(current_ids):
+        info = units[uid]
+        entry = ledger.get(uid)
+        was_available = bool(entry and entry.get("available"))
+        just_appeared = entry is None or not was_available
+
+        if just_appeared and not (entry and within_cooldown(entry.get("notified_at"), now)):
+            to_notify.append(uid)
+
+        if entry is None:
+            entry = {}
+            ledger[uid] = entry
+        entry["area"] = info.get("area")
+        entry["available"] = True
+        entry["last_seen"] = stamp
+        entry["available_from"] = info.get("availableFrom")
+        if uid in to_notify:
+            entry["notified_at"] = stamp
+
+    # Anything in the ledger not available this run is marked gone (but kept, so
+    # a brief disappearance/reappearance doesn't count as "new").
+    for uid, entry in ledger.items():
+        if uid not in current_ids:
+            entry["available"] = False
+
+    prune_ledger(ledger, now)
+
+    if first_run:
+        # Fresh install: one startup summary so you know it's alive; do not
+        # send a per-unit ping for everything already listed.
         if current_ids:
             lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
                      f"(from {format_available_from(units[i].get('availableFrom'))})"
@@ -256,20 +366,18 @@ def main():
                         f"You'll get a ping when one appears (favourite: {HIGHLIGHT_AREA}).",
                 tags=["house"],
             )
-        save_state(STATE_FILE, units)
+        save_state(STATE_FILE, ledger)
         log("Baseline saved. Future runs will notify only on new units.")
         return
 
-    new_ids = current_ids - previous
-    if not new_ids:
+    if not to_notify:
         log("No new units since last check.")
     else:
-        log(f"NEW unit(s): {sorted(new_ids)}")
-        for uid in sorted(new_ids):
+        log(f"NEW unit(s): {to_notify}")
+        for uid in to_notify:
             notify_new_unit(uid, units[uid])
 
-    # Persist the full current set so units that come back later re-trigger.
-    save_state(STATE_FILE, units)
+    save_state(STATE_FILE, ledger)
 
 
 if __name__ == "__main__":

@@ -72,6 +72,11 @@ From then on it runs automatically every ~10 minutes and only pings you when a
   for every already-listed unit. After that, only genuinely new units notify.
 - **State** is stored in `state/seen.json`, which the workflow commits back to the
   repo after each run. That's how it remembers across runs.
+- **No duplicate pings:** listings flicker (a unit briefly drops out of the API or
+  gets reserved, then reappears). The script keeps a persistent ledger and will
+  **not** re-notify about the same unit within a cooldown window (default 72 h),
+  so you're only pinged for genuinely new listings. Tune with the `RENOTIFY_HOURS`
+  repository variable if you want a shorter/longer window.
 - **Timing:** GitHub's scheduler honours a ~5-minute minimum and can be delayed a
   few minutes under load. Change the `cron:` line in
   `.github/workflows/monitor.yml` if you want a different cadence.
