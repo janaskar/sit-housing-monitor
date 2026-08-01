@@ -40,6 +40,9 @@ jobs:
           if [ -n "$(git status --porcelain state/)" ]; then
             git add state/
             git commit -m "Update housing state [skip ci]"
+            # The local 10-min runner may have pushed since checkout; rebase on
+            # top of it before pushing so the two never clobber each other.
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
             git push
           else
             echo "No state change to commit."
