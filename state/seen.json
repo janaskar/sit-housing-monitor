@@ -1,15 +1,17 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-01T14:52:24+00:00",
+  "updated": "2026-08-01T15:53:21+00:00",
   "seen": [
     "KL130-108",
     "MA22-54",
+    "OB155-203",
     "OB163-102",
     "WM41A-A132"
   ],
   "current": {
     "KL130-108": "Lerkendal",
     "MA22-54": "Moholt",
+    "OB155-203": "Berg",
     "OB163-102": "Berg",
     "WM41A-A132": "Rosenborg"
   }
