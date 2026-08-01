@@ -1,56 +1,35 @@
 #!/usr/bin/env bash
-# Local 10-minute runner for the Sit housing monitor (run in WSL via Windows
-# Task Scheduler). It shares state with the cloud GitHub Actions workflow through
-# git, so the two instances never send duplicate notifications:
+# Live local runner for the Sit housing monitor (run in WSL via Windows Task
+# Scheduler, which fires this every minute). Each invocation does a ~55-second
+# "burst" of fast polls (one lightweight request every ~15s), so a unit that
+# appears and is snapped up quickly is far less likely to slip through a gap.
 #
-#   1. pull the latest committed state (the cloud may have updated the ledger)
-#   2. run the check (which may push a notification and rewrite the state file)
-#   3. push the new state ONLY if the set of available units actually changed
-#      (avoids commit spam / push races; timestamp-only churn is discarded)
+# It shares state with the cloud GitHub Actions workflow through git so the two
+# never send duplicate notifications: pull the latest committed state first, then
+# the Python loop commits/pushes only when a new unit is actually found.
 #
 # The ntfy topic is read from .local/ntfy_topic (gitignored, stays on this PC).
 set -uo pipefail
 cd "$(dirname "$0")" || exit 1
 
-STATE="state/seen.json"
-TOPIC_FILE=".local/ntfy_topic"
+# Only one burst at a time: Task Scheduler may fire again before the previous
+# burst finishes. A second invocation grabs no lock and exits immediately.
+exec 9>".local/live.lock"
+if ! flock -n 9; then
+  exit 0
+fi
 
+TOPIC_FILE=".local/ntfy_topic"
 if [ ! -f "$TOPIC_FILE" ]; then
   echo "Missing $TOPIC_FILE (should contain your ntfy topic)."; exit 1
 fi
 export NTFY_TOPIC
 NTFY_TOPIC="$(tr -d ' \t\r\n' < "$TOPIC_FILE")"
 export CITY="${CITY:-Trondheim}"
+export LIVE_INTERVAL="${LIVE_INTERVAL:-15}"   # seconds between polls
+export BURST_SECONDS="${BURST_SECONDS:-50}"   # stay under the 1-min relaunch (leaves margin for git)
+export GIT_SYNC=1                             # push state on change (keeps cloud in sync)
 
-# Print the sorted set of currently-available unit ids from the state file.
-avail() {
-  python3 - "$STATE" <<'PY'
-import json, sys
-try:
-    d = json.load(open(sys.argv[1]))
-    print(" ".join(sorted(d.get("current", {}).keys())))
-except Exception:
-    print("")
-PY
-}
-
-# Get in sync with whatever the cloud (or a previous local run) committed.
+# Pick up any state the cloud committed while the PC was off, then poll live.
 git pull --rebase --autostash >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1
-
-before="$(avail)"
-python3 check_sit_housing.py
-rc=$?
-after="$(avail)"
-
-if [ "$before" != "$after" ]; then
-  # Availability changed (a new/dropped unit) -> persist so the cloud stays in sync.
-  git add "$STATE"
-  git commit -m "Update housing state (local) [skip ci]" >/dev/null 2>&1
-  git pull --rebase --autostash >/dev/null 2>&1
-  git push >/dev/null 2>&1 || echo "push failed (will retry next run)"
-else
-  # Only timestamps changed -> discard so the working tree stays clean.
-  git checkout -- "$STATE" >/dev/null 2>&1
-fi
-
-exit $rc
+python3 check_sit_housing.py --loop

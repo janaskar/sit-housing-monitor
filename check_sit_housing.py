@@ -25,8 +25,11 @@ Exit code is 0 for normal runs (including "no new housing") so a scheduler never
 treats a quiet check as a failure.
 """
 
+import argparse
 import json
 import os
+import random
+import subprocess
 import time
 import urllib.error
 import urllib.request
@@ -47,6 +50,17 @@ RENOTIFY_HOURS = int(os.environ.get("RENOTIFY_HOURS", "72"))
 # Forget units that have been gone this long, so a genuine re-list after a long
 # absence notifies again (and the state file doesn't grow forever).
 PRUNE_DAYS = int(os.environ.get("PRUNE_DAYS", "30"))
+# Live mode (--loop): average seconds between polls, and how long one invocation
+# runs before exiting (0 = run forever). Each poll is a single lightweight
+# request, so even a short interval is gentle on the API. LIVE_JITTER randomises
+# each gap by +/- that many seconds so the traffic looks organic instead of a
+# perfectly regular machine tick (default: half the interval).
+LIVE_INTERVAL = int(os.environ.get("LIVE_INTERVAL", "15"))
+LIVE_JITTER = int(os.environ.get("LIVE_JITTER", str(max(3, LIVE_INTERVAL // 2))))
+BURST_SECONDS = int(os.environ.get("BURST_SECONDS", "0"))
+# Set GIT_SYNC=1 to commit+push the state file to the shared repo on each change
+# (keeps the cloud fallback in sync so the two never send duplicate pings).
+GIT_SYNC = os.environ.get("GIT_SYNC") == "1"
 UNIT_URL_TEMPLATE = "https://bolig.sit.no/en/unit/{slug}"
 
 # The query the site uses, reduced to the fields we care about.
@@ -144,6 +158,21 @@ def fetch_available_units():
             if uid in units:
                 units[uid]["area"] = building
     return units
+
+
+def fetch_available_basic():
+    """
+    A single lightweight request: rentalObjectId -> {availableFrom, area:None}.
+
+    Used by live mode for the fast steady-state poll. Area (which costs extra
+    per-building requests) is only resolved when a genuinely new unit shows up.
+    """
+    top = graphql_housings([], include_filter_counts=False)
+    return {
+        u["rentalObjectId"]: {"availableFrom": u.get("availableFrom"), "area": None}
+        for u in (top.get("housingRentalObjects") or [])
+        if u.get("isAvailable")
+    }
 
 
 def now_iso():
@@ -302,70 +331,106 @@ def prune_ledger(ledger, now):
         log(f"Pruned {len(stale)} stale unit(s) absent > {PRUNE_DAYS} days.")
 
 
-def main():
-    if not NTFY_TOPIC:
-        log("WARNING: NTFY_TOPIC is not set. The script will run but cannot push "
-            "notifications. Set the NTFY_TOPIC environment variable / secret.")
+def should_notify(uid, ledger, now):
+    """A unit is notify-worthy if it just (re)appeared and isn't within cooldown."""
+    entry = ledger.get(uid)
+    was_available = bool(entry and entry.get("available"))
+    just_appeared = entry is None or not was_available
+    return just_appeared and not (entry and within_cooldown(entry.get("notified_at"), now))
 
-    units = fetch_available_units()
-    current_ids = set(units.keys())
-    summary = ", ".join(f"{uid} ({units[uid].get('area') or '?'})" for uid in sorted(current_ids))
-    log(f"{CITY}: {len(current_ids)} available unit(s): {summary or '-'}")
 
-    ledger, first_run = load_state(STATE_FILE)
-    now = datetime.now(timezone.utc)
+def diff_and_update(units, ledger, now):
+    """
+    Fold a fresh snapshot into the ledger and return the list of uids to notify.
+
+    `units` maps uid -> {availableFrom, area}. Area is only overwritten when the
+    snapshot actually carries one, so the cheap area-less live poll never wipes a
+    previously-resolved area.
+    """
     stamp = now_iso()
+    current_ids = set(units)
+    to_notify = [uid for uid in sorted(current_ids) if should_notify(uid, ledger, now)]
 
-    # Decide which currently-available units are genuinely worth a notification.
-    to_notify = []
     for uid in sorted(current_ids):
         info = units[uid]
-        entry = ledger.get(uid)
-        was_available = bool(entry and entry.get("available"))
-        just_appeared = entry is None or not was_available
-
-        if just_appeared and not (entry and within_cooldown(entry.get("notified_at"), now)):
-            to_notify.append(uid)
-
-        if entry is None:
-            entry = {}
-            ledger[uid] = entry
-        entry["area"] = info.get("area")
+        entry = ledger.setdefault(uid, {})
+        if info.get("area"):
+            entry["area"] = info["area"]
         entry["available"] = True
         entry["last_seen"] = stamp
         entry["available_from"] = info.get("availableFrom")
         if uid in to_notify:
             entry["notified_at"] = stamp
 
-    # Anything in the ledger not available this run is marked gone (but kept, so
-    # a brief disappearance/reappearance doesn't count as "new").
+    # Anything in the ledger not present now is marked gone (but kept, so a brief
+    # disappearance/reappearance doesn't count as "new").
     for uid, entry in ledger.items():
         if uid not in current_ids:
             entry["available"] = False
 
     prune_ledger(ledger, now)
+    return to_notify
+
+
+def send_startup_summary(units):
+    """One-off 'monitor is alive' notification listing what's currently available."""
+    current_ids = sorted(units)
+    if current_ids:
+        lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
+                 f"(from {format_available_from(units[i].get('availableFrom'))})"
+                 for i in current_ids]
+        send_ntfy(
+            title=f"Sit monitor started - watching {CITY}",
+            message=f"{len(current_ids)} unit(s) available now (favourite: {HIGHLIGHT_AREA}):\n"
+                    + "\n".join(lines),
+            click="https://bolig.sit.no/en/",
+            tags=["house"],
+        )
+    else:
+        send_ntfy(
+            title=f"Sit monitor started - watching {CITY}",
+            message=f"No {CITY} units available right now. "
+                    f"You'll get a ping when one appears (favourite: {HIGHLIGHT_AREA}).",
+            tags=["house"],
+        )
+
+
+def sync_state_to_git():
+    """Commit + push the state file so the cloud fallback stays in sync (best effort)."""
+    if not GIT_SYNC:
+        return
+
+    def git(*args):
+        return subprocess.run(["git", *args], capture_output=True, text=True)
+
+    git("add", STATE_FILE)
+    committed = git("commit", "-m", "Update housing state (live) [skip ci]")
+    if committed.returncode != 0:
+        return  # nothing to commit
+    git("pull", "--rebase", "--autostash")
+    pushed = git("push")
+    if pushed.returncode != 0:
+        log("git push failed (will retry on next change).")
+
+
+def main():
+    """One-shot check (used by the hourly cloud workflow)."""
+    if not NTFY_TOPIC:
+        log("WARNING: NTFY_TOPIC is not set. The script will run but cannot push "
+            "notifications. Set the NTFY_TOPIC environment variable / secret.")
+
+    units = fetch_available_units()
+    current_ids = sorted(units)
+    summary = ", ".join(f"{uid} ({units[uid].get('area') or '?'})" for uid in current_ids)
+    log(f"{CITY}: {len(current_ids)} available unit(s): {summary or '-'}")
+
+    ledger, first_run = load_state(STATE_FILE)
+    now = datetime.now(timezone.utc)
+    to_notify = diff_and_update(units, ledger, now)
 
     if first_run:
-        # Fresh install: one startup summary so you know it's alive; do not
-        # send a per-unit ping for everything already listed.
-        if current_ids:
-            lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
-                     f"(from {format_available_from(units[i].get('availableFrom'))})"
-                     for i in sorted(current_ids)]
-            send_ntfy(
-                title=f"Sit monitor started - watching {CITY}",
-                message=f"{len(current_ids)} unit(s) available now (favourite: {HIGHLIGHT_AREA}):\n"
-                        + "\n".join(lines),
-                click="https://bolig.sit.no/en/",
-                tags=["house"],
-            )
-        else:
-            send_ntfy(
-                title=f"Sit monitor started - watching {CITY}",
-                message=f"No {CITY} units available right now. "
-                        f"You'll get a ping when one appears (favourite: {HIGHLIGHT_AREA}).",
-                tags=["house"],
-            )
+        # Fresh install: one startup summary; don't ping for everything already listed.
+        send_startup_summary(units)
         save_state(STATE_FILE, ledger)
         log("Baseline saved. Future runs will notify only on new units.")
         return
@@ -380,5 +445,64 @@ def main():
     save_state(STATE_FILE, ledger)
 
 
+def run_loop():
+    """
+    Live mode: poll every LIVE_INTERVAL seconds (single lightweight request each),
+    notifying the instant a new unit appears. Runs for BURST_SECONDS then exits
+    (0 = forever). Survives transient fetch errors with a capped back-off.
+    """
+    if not NTFY_TOPIC:
+        log("WARNING: NTFY_TOPIC is not set; running without push notifications.")
+
+    ledger, first_run = load_state(STATE_FILE)
+    if first_run:
+        units = fetch_available_units()
+        diff_and_update(units, ledger, datetime.now(timezone.utc))
+        send_startup_summary(units)
+        save_state(STATE_FILE, ledger)
+        sync_state_to_git()
+        log("Baseline saved. Live monitoring now only pings on new units.")
+
+    log(f"Live mode: polling {CITY} every ~{LIVE_INTERVAL}s"
+        + (f" for {BURST_SECONDS}s" if BURST_SECONDS else " (continuous)")
+        + f"; favourite: {HIGHLIGHT_AREA}.")
+
+    start = time.monotonic()
+    backoff = 1
+    while True:
+        try:
+            now = datetime.now(timezone.utc)
+            basic = fetch_available_basic()
+            # Only pay for area resolution when something new actually shows up.
+            has_new = any(should_notify(uid, ledger, now) for uid in basic)
+            units = fetch_available_units() if has_new else basic
+            to_notify = diff_and_update(units, ledger, now)
+            if to_notify:
+                log(f"NEW unit(s): {to_notify}")
+                for uid in to_notify:
+                    notify_new_unit(uid, units.get(uid, basic.get(uid, {})))
+                save_state(STATE_FILE, ledger)
+                sync_state_to_git()
+            backoff = 1
+        except (SystemExit, Exception) as e:  # keep the loop alive through hiccups
+            log(f"Poll error ({e}); backing off.")
+            time.sleep(min(LIVE_INTERVAL * backoff, 300))
+            backoff = min(backoff * 2, 20)
+            continue
+
+        if BURST_SECONDS and (time.monotonic() - start) >= BURST_SECONDS:
+            return
+        # Randomise each gap by +/- LIVE_JITTER so polls don't fall on a robotic
+        # fixed cadence (min 2s so we never busy-loop).
+        time.sleep(max(2.0, LIVE_INTERVAL + random.uniform(-LIVE_JITTER, LIVE_JITTER)))
+
+
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Sit housing monitor")
+    parser.add_argument("--loop", action="store_true",
+                        help="Live mode: poll continuously (see LIVE_INTERVAL/BURST_SECONDS).")
+    args = parser.parse_args()
+    if args.loop:
+        run_loop()
+    else:
+        main()
