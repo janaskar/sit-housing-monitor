@@ -1,6 +1,6 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-02T07:16:14+00:00",
+  "updated": "2026-08-02T09:24:11+00:00",
   "current": {
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
@@ -14,21 +14,21 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "KL122-409": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -42,7 +42,7 @@
     "LO10-23": {
       "area": "Nedre Berg",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -56,7 +56,7 @@
     "MA22-23": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -77,14 +77,14 @@
     "OB163-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-09-03T00:00:00.000+02:00"
     },
     "WM41A-A132": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-02T07:16:14+00:00",
+      "last_seen": "2026-08-02T09:24:11+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-10-01T00:00:00.000+02:00"
     }
