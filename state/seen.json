@@ -1,18 +1,16 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-02T13:12:41+00:00",
+  "updated": "2026-08-02T14:43:24+00:00",
   "current": {
-    "FR041-11": "Frode Rinnans veg",
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
     "KL122-409": "Lerkendal",
-    "MA22-23": "Moholt",
     "OB163-102": "Berg"
   },
   "known": {
     "FR041-11": {
       "area": "Frode Rinnans veg",
-      "available": true,
+      "available": false,
       "last_seen": "2026-08-02T13:12:41+00:00",
       "available_from": "2026-08-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T10:52:13+00:00"
@@ -20,21 +18,21 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-02T13:12:41+00:00",
+      "last_seen": "2026-08-02T14:43:24+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-02T13:12:41+00:00",
+      "last_seen": "2026-08-02T14:43:24+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "KL122-409": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-02T13:12:41+00:00",
+      "last_seen": "2026-08-02T14:43:24+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -61,7 +59,7 @@
     },
     "MA22-23": {
       "area": "Moholt",
-      "available": true,
+      "available": false,
       "last_seen": "2026-08-02T13:12:41+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
@@ -90,7 +88,7 @@
     "OB163-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-02T13:12:41+00:00",
+      "last_seen": "2026-08-02T14:43:24+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-09-03T00:00:00.000+02:00"
     },
