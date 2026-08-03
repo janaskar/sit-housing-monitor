@@ -490,11 +490,18 @@ def run_loop():
             backoff = min(backoff * 2, 20)
             continue
 
-        if BURST_SECONDS and (time.monotonic() - start) >= BURST_SECONDS:
-            return
-        # Randomise each gap by +/- LIVE_JITTER so polls don't fall on a robotic
-        # fixed cadence (min 2s so we never busy-loop).
-        time.sleep(max(2.0, LIVE_INTERVAL + random.uniform(-LIVE_JITTER, LIVE_JITTER)))
+        delay = max(2.0, LIVE_INTERVAL + random.uniform(-LIVE_JITTER, LIVE_JITTER))
+        if BURST_SECONDS:
+            remaining = BURST_SECONDS - (time.monotonic() - start)
+            # Stop *before* the burst deadline instead of sleeping past it, so the
+            # burst always finishes before Task Scheduler's next launch. Otherwise
+            # a long final sleep makes the burst overrun the minute, the next
+            # launch is skipped (flock), and a ~1-min no-poll gap opens up.
+            if remaining <= 2.0:
+                return
+            delay = min(delay, remaining)
+        # Jitter keeps the cadence organic (min 2s so we never busy-loop).
+        time.sleep(delay)
 
 
 if __name__ == "__main__":

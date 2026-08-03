@@ -27,7 +27,7 @@ export NTFY_TOPIC
 NTFY_TOPIC="$(tr -d ' \t\r\n' < "$TOPIC_FILE")"
 export CITY="${CITY:-Trondheim}"
 export LIVE_INTERVAL="${LIVE_INTERVAL:-15}"   # seconds between polls
-export BURST_SECONDS="${BURST_SECONDS:-50}"   # stay under the 1-min relaunch (leaves margin for git)
+export BURST_SECONDS="${BURST_SECONDS:-50}"   # +~3s WSL/git startup keeps the whole run < 60s, so no 1-min launch is ever skipped
 export GIT_SYNC=1                             # push state on change (keeps cloud in sync)
 
 # Pick up any state the cloud committed while the PC was off, then poll live.
