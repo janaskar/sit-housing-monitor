@@ -1,13 +1,13 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-03T09:42:12+00:00",
+  "updated": "2026-08-03T11:44:13+00:00",
   "current": {
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
-    "HK31-12": "Moholt",
     "KL122-409": "Lerkendal",
     "MA22-23": "Moholt",
-    "MAL5-405": "Moholt"
+    "MAL5-405": "Moholt",
+    "OB060-202": "Berg"
   },
   "known": {
     "FR041-11": {
@@ -27,14 +27,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-03T09:42:11+00:00",
+      "last_seen": "2026-08-03T11:44:13+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-03T09:42:11+00:00",
+      "last_seen": "2026-08-03T11:44:13+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -47,7 +47,7 @@
     },
     "HK31-12": {
       "area": "Moholt",
-      "available": true,
+      "available": false,
       "last_seen": "2026-08-03T09:42:11+00:00",
       "available_from": "2026-10-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
@@ -55,7 +55,7 @@
     "KL122-409": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-03T09:42:11+00:00",
+      "last_seen": "2026-08-03T11:44:13+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -90,7 +90,7 @@
     "MA22-23": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-03T09:42:11+00:00",
+      "last_seen": "2026-08-03T11:44:13+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -111,9 +111,16 @@
     "MAL5-405": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-03T09:42:11+00:00",
+      "last_seen": "2026-08-03T11:44:13+00:00",
       "available_from": "2026-09-19T00:00:00.000+02:00",
       "notified_at": "2026-08-03T09:42:11+00:00"
+    },
+    "OB060-202": {
+      "area": "Berg",
+      "available": true,
+      "last_seen": "2026-08-03T11:44:13+00:00",
+      "available_from": "2026-08-04T00:00:00.000+02:00",
+      "notified_at": "2026-08-03T11:44:13+00:00"
     },
     "OB155-203": {
       "area": "Berg",
