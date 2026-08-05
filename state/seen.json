@@ -1,11 +1,14 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-05T21:21:49+00:00",
+  "updated": "2026-08-05T22:00:17+00:00",
   "current": {
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
     "HK31-12": "Moholt",
-    "KL124-711": "Lerkendal"
+    "KL124-711": "Lerkendal",
+    "KL130-312": "Lerkendal",
+    "OB058-102": "Berg",
+    "OB131-103": "Berg"
   },
   "known": {
     "FR041-11": {
@@ -39,14 +42,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T21:21:49+00:00",
+      "last_seen": "2026-08-05T22:00:16+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T21:21:49+00:00",
+      "last_seen": "2026-08-05T22:00:16+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -60,7 +63,7 @@
     "HK31-12": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T21:21:49+00:00",
+      "last_seen": "2026-08-05T22:00:16+00:00",
       "available_from": "2026-10-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
@@ -95,7 +98,7 @@
     "KL124-711": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-05T21:21:49+00:00",
+      "last_seen": "2026-08-05T22:00:16+00:00",
       "available_from": "2026-09-12T00:00:00.000+02:00",
       "notified_at": "2026-08-05T08:56:38+00:00"
     },
@@ -105,6 +108,13 @@
       "last_seen": "2026-08-01T16:21:04+00:00",
       "notified_at": "2026-08-01T15:55:03+00:00",
       "available_from": "2026-10-01T00:00:00.000+02:00"
+    },
+    "KL130-312": {
+      "area": "Lerkendal",
+      "available": true,
+      "last_seen": "2026-08-05T22:00:16+00:00",
+      "available_from": "2026-10-06T00:00:00.000+02:00",
+      "notified_at": "2026-08-05T22:00:16+00:00"
     },
     "KL130-603": {
       "area": "Lerkendal",
@@ -211,12 +221,26 @@
       "available_from": "2026-09-06T00:00:00.000+02:00",
       "notified_at": "2026-08-03T23:37:35+00:00"
     },
+    "OB058-102": {
+      "area": "Berg",
+      "available": true,
+      "last_seen": "2026-08-05T22:00:16+00:00",
+      "available_from": "2026-10-06T00:00:00.000+02:00",
+      "notified_at": "2026-08-05T22:00:16+00:00"
+    },
     "OB060-202": {
       "area": "Berg",
       "available": false,
       "last_seen": "2026-08-03T11:45:34+00:00",
       "available_from": "2026-08-04T00:00:00.000+02:00",
       "notified_at": "2026-08-03T11:44:13+00:00"
+    },
+    "OB131-103": {
+      "area": "Berg",
+      "available": true,
+      "last_seen": "2026-08-05T22:00:16+00:00",
+      "available_from": "2026-10-06T00:00:00.000+02:00",
+      "notified_at": "2026-08-05T22:00:16+00:00"
     },
     "OB141-201": {
       "area": "Berg",
