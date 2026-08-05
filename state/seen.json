@@ -1,6 +1,6 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-05T00:07:16+00:00",
+  "updated": "2026-08-05T03:27:49+00:00",
   "current": {
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
@@ -39,14 +39,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T00:07:16+00:00",
+      "last_seen": "2026-08-05T03:27:49+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T00:07:16+00:00",
+      "last_seen": "2026-08-05T03:27:49+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -60,14 +60,14 @@
     "HK31-12": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T00:07:16+00:00",
+      "last_seen": "2026-08-05T03:27:49+00:00",
       "available_from": "2026-10-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
     "HK35-34": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T00:07:16+00:00",
+      "last_seen": "2026-08-05T03:27:49+00:00",
       "available_from": "2026-09-20T00:00:00.000+02:00",
       "notified_at": "2026-08-03T21:13:53+00:00"
     },
