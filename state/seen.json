@@ -1,10 +1,12 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-05T16:58:18+00:00",
+  "updated": "2026-08-05T18:20:56+00:00",
   "current": {
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
-    "HK35-34": "Moholt"
+    "HK31-12": "Moholt",
+    "HK35-34": "Moholt",
+    "KL124-711": "Lerkendal"
   },
   "known": {
     "FR041-11": {
@@ -38,14 +40,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T16:58:18+00:00",
+      "last_seen": "2026-08-05T18:20:56+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T16:58:18+00:00",
+      "last_seen": "2026-08-05T18:20:56+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -58,15 +60,15 @@
     },
     "HK31-12": {
       "area": "Moholt",
-      "available": false,
-      "last_seen": "2026-08-05T15:24:10+00:00",
+      "available": true,
+      "last_seen": "2026-08-05T18:20:56+00:00",
       "available_from": "2026-10-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
     "HK35-34": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-05T16:58:18+00:00",
+      "last_seen": "2026-08-05T18:20:56+00:00",
       "available_from": "2026-09-20T00:00:00.000+02:00",
       "notified_at": "2026-08-03T21:13:53+00:00"
     },
@@ -93,8 +95,8 @@
     },
     "KL124-711": {
       "area": "Lerkendal",
-      "available": false,
-      "last_seen": "2026-08-05T15:24:10+00:00",
+      "available": true,
+      "last_seen": "2026-08-05T18:20:56+00:00",
       "available_from": "2026-09-12T00:00:00.000+02:00",
       "notified_at": "2026-08-05T08:56:38+00:00"
     },
