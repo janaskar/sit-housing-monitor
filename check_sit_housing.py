@@ -50,6 +50,11 @@ RENOTIFY_HOURS = int(os.environ.get("RENOTIFY_HOURS", "72"))
 # Forget units that have been gone this long, so a genuine re-list after a long
 # absence notifies again (and the state file doesn't grow forever).
 PRUNE_DAYS = int(os.environ.get("PRUNE_DAYS", "30"))
+# Suppress push notifications for units first available on/after this date
+# (yyyy-mm-dd). Once you already hold a contract from a given date, later units are
+# just noise. The unit is still tracked in the ledger; only the push is skipped.
+# Set NOTIFY_BEFORE="" to notify about everything again.
+NOTIFY_BEFORE = os.environ.get("NOTIFY_BEFORE", "2026-09-18").strip()
 # Live mode (--loop): average seconds between polls, and how long one invocation
 # runs before exiting (0 = run forever). Each poll is a single lightweight
 # request, so even a short interval is gentle on the API. LIVE_JITTER randomises
@@ -271,6 +276,25 @@ def is_highlight(area):
     return bool(area) and HIGHLIGHT_AREA and area.lower() == HIGHLIGHT_AREA.lower()
 
 
+def suppressed_by_cutoff(available_from):
+    """True if the unit's start date is on/after NOTIFY_BEFORE, so we skip the push.
+
+    Once you hold a contract from NOTIFY_BEFORE onward, any unit starting then or
+    later is irrelevant. Unknown/unparseable dates are never suppressed (better to
+    ping than silently miss one).
+    """
+    if not NOTIFY_BEFORE:
+        return False
+    start = parse_iso(available_from)
+    if start is None:
+        return False
+    try:
+        cutoff = datetime.fromisoformat(NOTIFY_BEFORE).date()
+    except ValueError:
+        return False
+    return start.date() >= cutoff
+
+
 def send_ntfy(title, message, click=None, tags=None, priority=None):
     if not NTFY_TOPIC:
         log("NTFY_TOPIC not set; skipping push. Message was:")
@@ -349,7 +373,11 @@ def diff_and_update(units, ledger, now):
     """
     stamp = now_iso()
     current_ids = set(units)
-    to_notify = [uid for uid in sorted(current_ids) if should_notify(uid, ledger, now)]
+    to_notify = [
+        uid for uid in sorted(current_ids)
+        if should_notify(uid, ledger, now)
+        and not suppressed_by_cutoff(units[uid].get("availableFrom"))
+    ]
 
     for uid in sorted(current_ids):
         info = units[uid]
@@ -374,7 +402,8 @@ def diff_and_update(units, ledger, now):
 
 def send_startup_summary(units):
     """One-off 'monitor is alive' notification listing what's currently available."""
-    current_ids = sorted(units)
+    current_ids = [i for i in sorted(units)
+                   if not suppressed_by_cutoff(units[i].get("availableFrom"))]
     if current_ids:
         lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
                  f"(from {format_available_from(units[i].get('availableFrom'))})"
