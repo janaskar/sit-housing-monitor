@@ -1,8 +1,7 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-06T13:06:43+00:00",
+  "updated": "2026-08-06T13:23:00+00:00",
   "current": {
-    "FR169-12": "Frode Rinnans veg",
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
     "HK31-12": "Moholt",
@@ -42,7 +41,7 @@
     },
     "FR169-12": {
       "area": "Frode Rinnans veg",
-      "available": true,
+      "available": false,
       "last_seen": "2026-08-06T13:06:43+00:00",
       "available_from": "2026-09-17T00:00:00.000+02:00",
       "notified_at": "2026-08-06T13:06:43+00:00"
@@ -57,14 +56,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -78,14 +77,14 @@
     "HK31-12": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-10-03T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
     "HK35-34": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-09-20T00:00:00.000+02:00",
       "notified_at": "2026-08-03T21:13:53+00:00"
     },
@@ -113,7 +112,7 @@
     "KL124-711": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-09-12T00:00:00.000+02:00",
       "notified_at": "2026-08-05T08:56:38+00:00"
     },
@@ -127,7 +126,7 @@
     "KL130-312": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
@@ -260,7 +259,7 @@
     "OB058-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-06T13:06:43+00:00",
+      "last_seen": "2026-08-06T13:23:00+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
