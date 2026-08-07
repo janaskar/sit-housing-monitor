@@ -33,6 +33,11 @@ jobs:
           CITY: ${{ vars.CITY || 'Trondheim' }}
         run: python check_sit_housing.py
 
+      - name: Check Abakus BedEx registration timing
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: python check_abakus.py
+
       - name: Commit updated state
         run: |
           git config user.name  "github-actions[bot]"

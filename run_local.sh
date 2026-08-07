@@ -32,4 +32,10 @@ export GIT_SYNC=1                             # push state on change (keeps clou
 
 # Pick up any state the cloud committed while the PC was off, then poll live.
 git pull --rebase --autostash >/dev/null 2>&1 || git rebase --abort >/dev/null 2>&1
+
+# Quick side-check: has Abakus set/changed the BedEx registration time yet?
+# One lightweight API GET; pings only on change. Runs before the ~50s housing
+# burst so it fires every minute too.
+python3 check_abakus.py || true
+
 python3 check_sit_housing.py --loop
