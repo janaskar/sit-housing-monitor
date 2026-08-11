@@ -1,10 +1,12 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-11T13:03:17+00:00",
+  "updated": "2026-08-11T14:23:21+00:00",
   "current": {
+    "FR079-11": "Frode Rinnans veg",
     "HK15-44": "Moholt",
     "HK23-24": "Moholt",
     "HK31-12": "Moholt",
+    "HK35-34": "Moholt",
     "KG15A-14": "Nedre Singsakerslette",
     "KL126-703": "Lerkendal",
     "KL130-312": "Lerkendal",
@@ -40,8 +42,8 @@
     },
     "FR079-11": {
       "area": "Frode Rinnans veg",
-      "available": false,
-      "last_seen": "2026-08-11T11:58:27+00:00",
+      "available": true,
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-09-19T00:00:00.000+02:00",
       "notified_at": "2026-08-03T06:03:53+00:00"
     },
@@ -83,14 +85,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -104,14 +106,14 @@
     "HK31-12": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
     "HK35-34": {
       "area": "Moholt",
-      "available": false,
-      "last_seen": "2026-08-09T23:21:25+00:00",
+      "available": true,
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-09-20T00:00:00.000+02:00",
       "notified_at": "2026-08-03T21:13:53+00:00"
     },
@@ -138,7 +140,7 @@
     "KG15A-14": {
       "area": "Nedre Singsakerslette",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     },
     "KG19d-22": {
@@ -191,7 +193,7 @@
     "KL126-703": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00"
     },
     "KL130-108": {
@@ -204,7 +206,7 @@
     "KL130-312": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
@@ -328,7 +330,7 @@
     "MA20-52": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-08T00:00:00.000+02:00"
     },
     "MA22-23": {
@@ -417,7 +419,7 @@
     "OB009-202": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     },
     "OB041-203": {
@@ -430,13 +432,13 @@
     "OB058-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00"
     },
     "OB058-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
@@ -457,7 +459,7 @@
     "OB125-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00"
     },
     "OB131-103": {
@@ -512,13 +514,13 @@
     "WM41A-A141": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     },
     "WM41A-A252": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-11T13:03:17+00:00",
+      "last_seen": "2026-08-11T14:23:21+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     }
   }
