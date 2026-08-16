@@ -1,6 +1,6 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-16T08:50:01+00:00",
+  "updated": "2026-08-16T09:12:28+00:00",
   "current": {
     "FR169-12": "Frode Rinnans veg",
     "HK05-21": "Moholt",
@@ -78,7 +78,7 @@
     "FR169-12": {
       "area": "Frode Rinnans veg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-09-17T00:00:00.000+02:00",
       "notified_at": "2026-08-13T21:51:23+00:00"
     },
@@ -92,7 +92,7 @@
     "HK05-21": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-09-21T00:00:00.000+02:00"
     },
     "HK10-54": {
@@ -119,14 +119,14 @@
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
@@ -146,7 +146,7 @@
     "HK31-12": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-02T22:00:54+00:00"
     },
@@ -207,7 +207,7 @@
     "KL120-201": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-12T00:00:00.000+02:00"
     },
     "KL120-301": {
@@ -239,26 +239,26 @@
     "KL122-413": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-14T00:00:00.000+02:00"
     },
     "KL122-712": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-15T00:00:00.000+02:00"
     },
     "KL124-102": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-09-10T00:00:00.000+02:00",
       "notified_at": "2026-08-15T04:50:32+00:00"
     },
     "KL124-310": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-16T00:00:00.000+02:00"
     },
     "KL124-711": {
@@ -284,14 +284,14 @@
     "KL130-312": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
     "KL130-502": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-12T00:00:00.000+02:00"
     },
     "KL130-603": {
@@ -304,7 +304,7 @@
     "KL52-211": {
       "area": "Teknobyen",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-09-29T00:00:00.000+02:00"
     },
     "KL52-315": {
@@ -559,7 +559,7 @@
     "OB009-202": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     },
     "OB013-12": {
@@ -579,25 +579,25 @@
     "OB047-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB055-204": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB058-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00"
     },
     "OB058-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
@@ -618,7 +618,7 @@
     "OB099-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-12T00:00:00.000+02:00"
     },
     "OB125-101": {
@@ -658,7 +658,7 @@
     "OB161-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB163-102": {
@@ -671,7 +671,7 @@
     "OB181-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-08-22T00:00:00.000+02:00",
       "notified_at": "2026-08-16T04:30:42+00:00"
     },
@@ -705,7 +705,7 @@
     "WM41A-A242": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-16T08:50:01+00:00",
+      "last_seen": "2026-08-16T09:12:28+00:00",
       "available_from": "2026-10-16T00:00:00.000+02:00"
     },
     "WM41A-A252": {
