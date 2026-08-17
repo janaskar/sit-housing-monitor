@@ -1,16 +1,16 @@
 {
   "event_id": "4072",
-  "updated": "2026-08-07T18:54:53+00:00",
+  "updated": "2026-08-17T11:46:53+00:00",
   "snapshot": {
     "activationTime": null,
     "registrationCloseTime": "2026-09-02T22:00:00Z",
-    "unregistrationDeadline": "2026-08-21T10:00:00Z",
+    "unregistrationDeadline": "2026-08-24T10:00:00Z",
     "paymentDueDate": "2026-08-28T10:00:00Z",
     "mergeTime": "2026-09-04T10:00:00Z",
     "startTime": "2026-09-08T06:00:00Z",
     "endTime": "2026-09-11T14:00:00Z",
-    "pool:3. klassinger": "2026-09-01T10:00:00Z",
-    "pool:4. klassinger": "2026-09-01T10:00:00Z",
-    "pool:5. klassinger": "2026-09-01T10:00:00Z"
+    "pool:3. klassinger": "2026-08-21T10:00:00Z",
+    "pool:4. klassinger": "2026-08-21T10:00:00Z",
+    "pool:5. klassinger": "2026-08-21T10:00:00Z"
   }
 }
