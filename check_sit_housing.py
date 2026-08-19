@@ -55,6 +55,24 @@ PRUNE_DAYS = int(os.environ.get("PRUNE_DAYS", "30"))
 # just noise. The unit is still tracked in the ledger; only the push is skipped.
 # Set NOTIFY_BEFORE="" to notify about everything again.
 NOTIFY_BEFORE = os.environ.get("NOTIFY_BEFORE", "2026-09-18").strip()
+# NOTIFY_AREAS / NOTIFY_FROM / NOTIFY_TO further narrow *which* new units earn a
+# push, on top of NOTIFY_BEFORE. Once you already hold a keeper + a bridge, the
+# only unit worth a ping is a *better bridge*: a room in a wanted area with a
+# move-in inside a small window. Empty any of these to drop that part of the
+# filter (NOTIFY_AREAS="" = any area; NOTIFY_FROM/TO="" = no bound). Units are
+# still tracked in the ledger regardless; only the push is gated.
+#   NOTIFY_AREAS  comma-separated area allowlist, case-insensitive.
+#   NOTIFY_FROM   earliest move-in date to ping about (yyyy-mm-dd).
+#   NOTIFY_TO     latest   move-in date to ping about (yyyy-mm-dd).
+NOTIFY_AREAS = {
+    a.strip().lower()
+    for a in os.environ.get(
+        "NOTIFY_AREAS", "Karinelund,Frode Rinnans veg,Moholt"
+    ).split(",")
+    if a.strip()
+}
+NOTIFY_FROM = os.environ.get("NOTIFY_FROM", "2026-09-14").strip()
+NOTIFY_TO = os.environ.get("NOTIFY_TO", "2026-09-17").strip()
 # Live mode (--loop): average seconds between polls, and how long one invocation
 # runs before exiting (0 = run forever). Each poll is a single lightweight
 # request, so even a short interval is gentle on the API. LIVE_JITTER randomises
@@ -295,6 +313,33 @@ def suppressed_by_cutoff(available_from):
     return start.date() >= cutoff
 
 
+def notify_wanted(area, available_from):
+    """True if a new unit is worth a push: right area *and* move-in inside the
+    NOTIFY_FROM..NOTIFY_TO window. This is what silences the general firehose once
+    you hold a keeper + bridge, leaving only a better-bridge unit to ping. Empty
+    NOTIFY_AREAS/FROM/TO drop the matching part of the filter. Unknown/unparseable
+    dates pass the window check (better to ping than silently miss a wanted unit).
+    """
+    if NOTIFY_AREAS and (not area or area.strip().lower() not in NOTIFY_AREAS):
+        return False
+    start = parse_iso(available_from)
+    if start is not None:
+        start = start.date()
+        if NOTIFY_FROM:
+            try:
+                if start < datetime.fromisoformat(NOTIFY_FROM).date():
+                    return False
+            except ValueError:
+                pass
+        if NOTIFY_TO:
+            try:
+                if start > datetime.fromisoformat(NOTIFY_TO).date():
+                    return False
+            except ValueError:
+                pass
+    return True
+
+
 def send_ntfy(title, message, click=None, tags=None, priority=None):
     if not NTFY_TOPIC:
         log("NTFY_TOPIC not set; skipping push. Message was:")
@@ -377,6 +422,7 @@ def diff_and_update(units, ledger, now):
         uid for uid in sorted(current_ids)
         if should_notify(uid, ledger, now)
         and not suppressed_by_cutoff(units[uid].get("availableFrom"))
+        and notify_wanted(units[uid].get("area"), units[uid].get("availableFrom"))
     ]
 
     for uid in sorted(current_ids):
@@ -403,7 +449,8 @@ def diff_and_update(units, ledger, now):
 def send_startup_summary(units):
     """One-off 'monitor is alive' notification listing what's currently available."""
     current_ids = [i for i in sorted(units)
-                   if not suppressed_by_cutoff(units[i].get("availableFrom"))]
+                   if not suppressed_by_cutoff(units[i].get("availableFrom"))
+                   and notify_wanted(units[i].get("area"), units[i].get("availableFrom"))]
     if current_ids:
         lines = [f"- {units[i].get('area') or 'unknown'}: {i} "
                  f"(from {format_available_from(units[i].get('availableFrom'))})"
