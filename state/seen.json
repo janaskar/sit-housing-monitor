@@ -1,12 +1,15 @@
 {
   "city": "Trondheim",
-  "updated": "2026-08-21T04:23:54+00:00",
+  "updated": "2026-08-21T05:01:52+00:00",
   "current": {
+    "BR153-23": "Karinelund",
     "FR039-12": "Frode Rinnans veg",
     "FR125-11": "Frode Rinnans veg",
     "FR169-12": "Frode Rinnans veg",
     "HK05-21": "Moholt",
+    "HK13-41": "Moholt",
     "HK15-44": "Moholt",
+    "HK19-32": "Moholt",
     "HK23-24": "Moholt",
     "HK26-32": "Moholt",
     "IHV16-A301": "Parkbygget",
@@ -36,6 +39,12 @@
     "WM41A-A171": "Rosenborg"
   },
   "known": {
+    "BR153-23": {
+      "area": "Karinelund",
+      "available": true,
+      "last_seen": "2026-08-21T05:01:52+00:00",
+      "available_from": "2026-08-25T00:00:00.000+02:00"
+    },
     "BR157-28": {
       "area": "Karinelund",
       "available": false,
@@ -60,7 +69,7 @@
     "FR039-12": {
       "area": "Frode Rinnans veg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-16T00:00:00.000+02:00"
     },
     "FR041-11": {
@@ -94,14 +103,14 @@
     "FR125-11": {
       "area": "Frode Rinnans veg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-08T00:00:00.000+02:00",
       "notified_at": "2026-08-16T09:15:44+00:00"
     },
     "FR169-12": {
       "area": "Frode Rinnans veg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-17T00:00:00.000+02:00",
       "notified_at": "2026-08-13T21:51:23+00:00"
     },
@@ -115,7 +124,7 @@
     "HK05-21": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-21T00:00:00.000+02:00"
     },
     "HK10-54": {
@@ -139,12 +148,24 @@
       "available_from": "2026-08-11T00:00:00.000+02:00",
       "notified_at": "2026-08-10T07:59:03+00:00"
     },
+    "HK13-41": {
+      "area": "Moholt",
+      "available": true,
+      "last_seen": "2026-08-21T05:01:52+00:00",
+      "available_from": "2026-10-14T00:00:00.000+02:00"
+    },
     "HK15-44": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
+    },
+    "HK19-32": {
+      "area": "Moholt",
+      "available": true,
+      "last_seen": "2026-08-21T05:01:52+00:00",
+      "available_from": "2026-08-25T00:00:00.000+02:00"
     },
     "HK19-43": {
       "area": "Moholt",
@@ -156,14 +177,14 @@
     "HK23-24": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-02T00:00:00.000+02:00",
       "notified_at": "2026-08-01T22:01:04+00:00"
     },
     "HK26-32": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-21T00:00:00.000+02:00"
     },
     "HK29-11": {
@@ -250,13 +271,13 @@
     "IHV16-A301": {
       "area": "Parkbygget",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-19T00:00:00.000+02:00"
     },
     "IHV16-B302": {
       "area": "Parkbygget",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-19T00:00:00.000+02:00"
     },
     "IHV16-B303": {
@@ -275,7 +296,7 @@
     "KG19c-15": {
       "area": "Nedre Singsakerslette",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-15T00:00:00.000+02:00"
     },
     "KG19d-22": {
@@ -295,7 +316,7 @@
     "KL120-201": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-12T00:00:00.000+02:00"
     },
     "KL120-301": {
@@ -307,7 +328,7 @@
     "KL120-411": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-05T00:00:00.000+02:00",
       "notified_at": "2026-08-17T22:00:18+00:00"
     },
@@ -327,13 +348,13 @@
     "KL122-413": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-14T00:00:00.000+02:00"
     },
     "KL122-712": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-15T00:00:00.000+02:00"
     },
     "KL124-102": {
@@ -346,7 +367,7 @@
     "KL124-310": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-16T00:00:00.000+02:00"
     },
     "KL124-711": {
@@ -366,7 +387,7 @@
     "KL126-703": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00"
     },
     "KL130-108": {
@@ -379,14 +400,14 @@
     "KL130-312": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-06T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
     "KL130-502": {
       "area": "Lerkendal",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-12T00:00:00.000+02:00"
     },
     "KL130-603": {
@@ -507,7 +528,7 @@
     "MA04-41": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-21T00:00:00.000+02:00"
     },
     "MA04-53": {
@@ -562,7 +583,7 @@
     "MA10-71": {
       "area": "Moholt",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-20T00:00:00.000+02:00",
       "notified_at": "2026-08-19T12:38:11+00:00"
     },
@@ -720,14 +741,14 @@
     "OB005-203": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-06T00:00:00.000+02:00",
       "notified_at": "2026-08-19T20:59:16+00:00"
     },
     "OB009-202": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-10T00:00:00.000+02:00"
     },
     "OB013-12": {
@@ -747,25 +768,25 @@
     "OB047-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB055-204": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB058-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00"
     },
     "OB058-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-09T00:00:00.000+02:00",
       "notified_at": "2026-08-05T22:00:16+00:00"
     },
@@ -786,20 +807,20 @@
     "OB075-204": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-21T00:00:00.000+02:00"
     },
     "OB089-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-08-24T00:00:00.000+02:00",
       "notified_at": "2026-08-18T08:59:30+00:00"
     },
     "OB099-101": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-09-03T00:00:00.000+02:00",
       "notified_at": "2026-08-19T10:33:44+00:00"
     },
@@ -846,7 +867,7 @@
     "OB161-102": {
       "area": "Berg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-13T00:00:00.000+02:00"
     },
     "OB163-102": {
@@ -886,7 +907,7 @@
     "SB4D-22C": {
       "area": "Nedre Singsakerslette",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-14T00:00:00.000+02:00"
     },
     "SV08-A11": {
@@ -912,7 +933,7 @@
     "WM41A-A171": {
       "area": "Rosenborg",
       "available": true,
-      "last_seen": "2026-08-21T04:23:54+00:00",
+      "last_seen": "2026-08-21T05:01:52+00:00",
       "available_from": "2026-10-18T00:00:00.000+02:00"
     },
     "WM41A-A242": {
