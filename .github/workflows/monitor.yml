@@ -1,10 +1,11 @@
 name: Sit housing monitor
 
 on:
-  schedule:
-    # Every 10 minutes. GitHub cron is UTC and can be delayed under load;
-    # the minimum interval it honours is ~5 minutes.
-    - cron: "*/10 * * * *"
+  # Scheduled runs DISABLED 2026-08-24 — housing secured (Karinelund keeper +
+  # Parkbygget bridge terminated to Sep 18) and BedEx spot confirmed, so both
+  # watchers are retired. Re-enable by uncommenting the cron below.
+  # schedule:
+  #   - cron: "*/10 * * * *"
   workflow_dispatch: {}   # lets you run it manually from the Actions tab
 
 # Allow the workflow to commit the updated state file back to the repo.
